@@ -24,13 +24,20 @@ public class UserController {
 		return "index";
 	}
 	
-	@PostMapping("/")
+	@PostMapping("/login")
 	public String checkAuthentication(ModelMap model, @RequestParam("email") String email, @RequestParam("password") String password) {
 		
-		User user = userService.getUserByEmail(email);
-		logger.info("email is: " + email);
-		logger.info("User: " + user.getName());
+		if(!email.isBlank() && !password.isBlank()) {
+			User user = userService.getUserByEmail(email);
+			logger.info("email is: " + email);
+			logger.info("User: " + user.getName());
+			if(user.getPassword().equals(password)) {
+				model.addAttribute("user", user.getName());
+				return "success";
+			}
+		}
 		
-		return "success";
+		
+		return "fail";
 	}
 }
